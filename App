@@ -27,6 +27,8 @@ namespace App
             ek.move(c);
         }
         ek.print_dead();
+        std::cout << "GAME OVER";
+        getch();
     }
 }
 
