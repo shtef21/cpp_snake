@@ -17,7 +17,6 @@ public:
     string ek;
     const int w, h;
     deque<Snake> s;
-    bool game_over;
 
     struct _Hrana
     {
@@ -158,10 +157,23 @@ public:
         return true;
     }
 
-    bool is_game_over()
+    /*bool is_game_over()
     {
         return s[0].x == 0 || s[0].y == 0 || s[0].x == w - 1 || s[0].y == h - 1 || game_over;
-    }
+    }*/
+    
+    // prebaci u Snake datoteku
+    bool snake_eq(Snake& s1, Snake& s2)
+    {
+    	return s1.x == s2.x && s1.y == s2.y;
+    } 
+    
+    // make long function
+    bool is_game_over()
+    {
+    	
+    } 
+    
 
 };
 
