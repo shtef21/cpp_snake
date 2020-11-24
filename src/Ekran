@@ -95,10 +95,21 @@ public:
         // }
         std::cout << copy;
     }
+    
+    bool food_xy_ok(int _x,int _y)
+    {
+   	for (auto it=s.begin(); it!=s.end(); ++it) 
+  		if (it->x == _x || it->y == _y) return false;
+		return _x>0 && _x<w-1 && _y>0 && _y<h-1;
+    }
 
     void set_hrana()
     {
-        hr.set(1+rand()%(w-2),1+rand()%(h-2));
+    	int _x=-1,_y=-1;
+   	do
+   {_x=1+rand()%(w-2);_y=1+rand()%(h-2));} while (!food_xy_ok(_x, _y));
+    
+        hr.set(_x, _y);
     }
 
     bool move(char c)
