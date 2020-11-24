@@ -1,0 +1,14 @@
+#ifndef SNAKE_APP_SNAKE
+#define SNAKE_APP_SNAKE
+
+#include <iostream>
+
+class Snake
+{
+private:
+public:
+    int x, y;
+    Snake(int x, int y) : x(x), y(y) {}
+};
+
+#endif

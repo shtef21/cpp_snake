@@ -1,0 +1,158 @@
+#ifndef SNAKE_APP_EKRAN
+#define SNAKE_APP_EKRAN
+
+#include <iostream>
+#include "Snake"
+
+#include <string>
+#include <deque>
+
+using std::string;
+using std::deque;
+
+class Ekran
+{
+private:
+public:
+    string ek;
+    const int w, h;
+    deque<Snake> s;
+    bool game_over;
+
+    struct _Hrana
+    {
+        int x, y;
+        _Hrana(int x, int y) : x(x), y(y) {}
+        void eat() { x = y = 0; }
+    } hr;
+
+    struct CH
+    {
+        // Zidovi mape
+        static const char z='X';
+        // Hrana
+        static const char hr='.';
+        // Glava, tijelo
+        static const char gl='@',tj='+';
+    };
+
+    Ekran(int w, int h) : w(w), h(h), ek(w*h, ' '), game_over(false), hr(0, 0), s({ Snake(w/2, h/2), Snake(w/2, h/2 + 1), Snake(w/2, h/2 + 2) })
+    {
+        std::cout << "Ekran::Ekran\n";
+
+        // Zidovi
+        for (int i = 0; i < w; ++i)
+        {
+            ek[i] = CH::z;
+            ek[(h-1)*w + i] = CH::z;
+        }
+        for (int i = 0; i < h; ++i)
+        {
+            ek[i*w] = CH::z;
+            ek[i*w + w-1] = CH::z;
+        }
+    }
+
+    void print()
+    {
+        string copy = ek;
+
+        // Draw food
+        if (hr.x != 0)
+            copy[hr.y*w + hr.x] = CH::hr;
+
+        // Draw snake
+        copy[s[0].y*w + s[0].x] = CH::gl;
+        for (auto it = s.begin() + 1; it != s.end(); ++it)
+            copy[it->y * w + it->x] = CH::tj;
+        for (int i = 0; i < h; ++i)
+        {
+            for (int j = 0; j < w; ++j)
+                std::cout << copy[i * w + j];
+            std::cout << "\n";
+        }
+    }
+
+    void print_dead()
+    {
+        string copy = ek;
+
+        // Draw food
+        if (hr.x != 0)
+            copy[hr.y*w + hr.x] = CH::hr;
+
+        // Draw snake
+        copy[s[0].y*w + s[0].x] = 'X';
+        for (auto it = s.begin() + 1; it != s.end(); ++it)
+            copy[it->y * w + it->x] = 'X';
+        for (int i = 0; i < h; ++i)
+        {
+            for (int j = 0; j < w; ++j)
+                std::cout << copy[i * w + j];
+            std::cout << "\n";
+        }
+    }
+
+    void set_hrana()
+    {
+        if (hr.x == 0 && hr.y == 0)
+        {
+            hr.x = s[0].x - 1;
+            hr.y = s[0].y;
+        }
+    }
+
+    bool move(char c)
+    {
+        if (c != 'w' && c != 'a' && c != 's' && c != 'd')
+            return false;
+        if (game_over)
+            return false;
+
+        int new_x = s[0].x;
+        int new_y = s[0].y;
+        switch(c)
+        {
+        case 'w':
+            --new_y;
+            break;
+        case 'a':
+            --new_x;
+            break;
+        case 's':
+            ++new_y;
+            break;
+        case 'd':
+            ++new_x;
+            break;
+        default:
+            break;
+        }
+
+        for (auto it = s.begin(); it != s.end() - 1; ++it)
+            if (it->x == new_x && it->y == new_y)
+                return !(game_over = true);
+
+        if (new_x == hr.x && new_y == hr.y)
+        {
+            hr.eat();
+            s.push_back(s[s.size() - 1]);
+        }
+        for (auto it = s.rbegin(); it != s.rend() - 1; ++it)
+        {
+            it->x = (it+1)->x;
+            it->y = (it+1)->y;
+        }
+        s[0].x = new_x;
+        s[0].y = new_y;
+        return true;
+    }
+
+    bool is_game_over()
+    {
+        return s[0].x == 0 || s[0].y == 0 || s[0].x == w - 1 || s[0].y == h - 1 || game_over;
+    }
+
+};
+
+#endif

@@ -1,0 +1,33 @@
+#ifndef SNAKE_APP
+#define SNAKE_APP
+
+#include <iostream>
+#include <conio.h>
+
+#include "src/Ekran"
+#include "src/Snake"
+
+namespace App
+{
+    void run()
+    {
+        std::cout << "App::run called\n";
+
+        Ekran ek = Ekran(30, 15);
+
+        char c = 0;
+        while(c != 27 && !ek.is_game_over())
+        {
+            ek.print();
+
+            // Simuliraj ulaz
+            c = getch();
+
+            ek.set_hrana();
+            ek.move(c);
+        }
+        ek.print_dead();
+    }
+}
+
+#endif
